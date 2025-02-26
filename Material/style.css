@@ -10,20 +10,48 @@ body {
 
 .game-container {
     display: grid;
-    /* grid-template-columns: repeat(4, 100px); */
-    grid-gap: 10px;
+    grid-gap: 10px; /* Khoảng cách cố định */
+    width: auto; /* PC giữ nguyên kích thước */
 }
 
 .card {
-    width: 100px;
-    height: 100px;
+    width: 22vw; /* Chia kích thước theo màn hình */
+    max-width: 100px; /* Không quá to */
+    height: 22vw;
+    max-height: 100px;
     background-color: #9F2C57;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 5vw;
     color: white;
     cursor: pointer;
+    border-radius: 10px;
+}
+
+/* Kích thước cố định cho PC */
+@media (min-width: 1025px) {
+    .game-container {
+        grid-template-columns: repeat(4, 100px); /* 4 cột với ô 100px */
+    }
+    .card {
+        width: 100px;
+        height: 100px;
+        font-size: 24px;
+    }
+}
+
+/* Mobile: tự động điều chỉnh */
+@media (max-width: 600px) {
+    .game-container {
+        grid-template-columns: repeat(3, 1fr); /* 3 cột trên mobile */
+        width: 90vw;
+    }
+    .card {
+        width: 25vw; /* Chiếm 25% chiều rộng màn hình */
+        height: 25vw;
+        font-size: 6vw;
+    }
 }
 
 .flipped {

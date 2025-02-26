@@ -69,11 +69,17 @@ function closePopup() {
 function createBoard() {
   const gameBoard = document.getElementById("gameBoard");
   gameBoard.innerHTML = "";
+
   document.getElementById("nextStep").style.display = "none";
   document.getElementById("playAgain").style.display = "none";
   document.getElementById("highScores").style.display = "block";
+
   let level = levels[currentLevel];
-  gameBoard.style.gridTemplateColumns = `repeat(${level.cols}, 100px)`;
+
+  // Kiểm tra kích thước màn hình và điều chỉnh số cột
+  let columns = window.innerWidth < 600 ? 3 : 3; // Mobile: 3 cột, Desktop: 4 cột
+  gameBoard.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+
   let pairs = (level.rows * level.cols) / 2;
   cards = shuffle([...emojis.slice(0, pairs), ...emojis.slice(0, pairs)]);
 
@@ -89,6 +95,8 @@ function createBoard() {
   document.getElementById("timer").textContent = timeLeft;
   startTimer();
 }
+// Cập nhật lại board nếu thay đổi kích thước màn hình
+window.addEventListener("resize", createBoard);
 
 function flipCard() {
   if (
