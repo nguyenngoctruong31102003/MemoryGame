@@ -34,6 +34,7 @@ let cards,
 let timeLeft, timerInterval;
 let highScores = JSON.parse(localStorage.getItem("highScores")) || [0, 0, 0];
 let isPaused = false; // Biến kiểm tra trạng thái tạm dừng thời gian
+let gameOver = false;
 
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
@@ -103,6 +104,7 @@ function createBoard() {
 function flipCard() {
   if (
     lockBoard ||
+    gameOver ||
     this.classList.contains("flipped") ||
     this.classList.contains("matched")
   )
@@ -160,8 +162,10 @@ function startTimer() {
   timerInterval = setInterval(() => {
     timeLeft--;
     document.getElementById("timer").textContent = timeLeft;
+
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
+      gameOver = true; // Đánh dấu trò chơi kết thúc, chặn lật thẻ
       updateHighScores(); // Cập nhật điểm số
       setTimeout(() => {
         showPopup(`Bạn dở quá è! [GOODLUCK TO YOU] <br>Điểm của bạn: ${score}`);
@@ -195,8 +199,10 @@ function showHighScores() {
 
 function resetGame() {
   score = 0;
+  document.getElementById("score").textContent = score;
   currentLevel = 0;
   matchedPairs = 0;
+  gameOver = false;
   createBoard();
 }
 
