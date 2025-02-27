@@ -12,6 +12,8 @@ body {
     display: grid;
     grid-gap: 10px; /* Khoảng cách cố định */
     width: auto; /* PC giữ nguyên kích thước */
+    min-height: 300px;
+    overflow: scroll;
 }
 
 .card {

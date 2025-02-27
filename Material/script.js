@@ -7,30 +7,9 @@ const levels = [
   { rows: 6, cols: 6, time: 70 },
   { rows: 6, cols: 7, time: 80 },
 ];
-let emojis = [
-  "🍎",
-  "🍌",
-  "🍇",
-  "🍉",
-  "🍓",
-  "🍒",
-  "🥝",
-  "🍍",
-  "🍊",
-  "🍋",
-  "🥥",
-  "🍑",
-  "🥭",
-  "🍈",
-  "🍏",
-];
-let currentLevel = 0,
-  score = 0,
-  matchedPairs = 0;
-let cards,
-  firstCard,
-  secondCard,
-  lockBoard = false;
+let emojis = [ "🍎", "🍌", "🍇", "🍉", "🍓", "🍒", "🥝", "🍍", "🍊", "🍋","🥥", "🍑", "🥭", "🍈", "🍏",];
+let currentLevel = 0, score = 0, matchedPairs = 0;
+let cards, firstCard, secondCard, lockBoard = false;
 let timeLeft, timerInterval;
 let highScores = JSON.parse(localStorage.getItem("highScores")) || [0, 0, 0];
 let isPaused = false; // Biến kiểm tra trạng thái tạm dừng thời gian
