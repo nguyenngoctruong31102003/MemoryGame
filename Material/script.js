@@ -7,9 +7,30 @@ const levels = [
   { rows: 6, cols: 6, time: 75 },
   { rows: 6, cols: 7, time: 90 },
 ];
-let emojis = [ "🍎", "🍌", "🍇", "🍉", "🍓", "🍒", "🥝", "🍍", "🍊", "🍋","🥥", "🍑", "🥭", "🍈", "🍏",];
-let currentLevel = 0, score = 0, matchedPairs = 0;
-let cards, firstCard, secondCard, lockBoard = false;
+let emojis = [
+  "🍎",
+  "🍌",
+  "🍇",
+  "🍉",
+  "🍓",
+  "🍒",
+  "🥝",
+  "🍍",
+  "🍊",
+  "🍋",
+  "🥥",
+  "🍑",
+  "🥭",
+  "🍈",
+  "🍏",
+];
+let currentLevel = 0,
+  score = 0,
+  matchedPairs = 0;
+let cards,
+  firstCard,
+  secondCard,
+  lockBoard = false;
 let timeLeft, timerInterval;
 let highScores = JSON.parse(localStorage.getItem("highScores")) || [0, 0, 0];
 let isPaused = false; // Biến kiểm tra trạng thái tạm dừng thời gian
@@ -54,10 +75,11 @@ function createBoard() {
   document.getElementById("highScores").style.display = "block";
 
   let level = levels[currentLevel];
+  let screenWidth = window.innerWidth;
+  let cardSize =
+    screenWidth < 768 ? Math.floor(screenWidth / level.cols) - 10 : 100;
 
-  // Kiểm tra kích thước màn hình và điều chỉnh số cột
-  let columns = window.innerWidth < 600 ? 3 : 3; // Mobile: 3 cột, Desktop: 4 cột
-  gameBoard.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+  gameBoard.style.gridTemplateColumns = `repeat(${level.cols}, ${cardSize}px)`;
 
   let pairs = (level.rows * level.cols) / 2;
   cards = shuffle([...emojis.slice(0, pairs), ...emojis.slice(0, pairs)]);
@@ -67,6 +89,9 @@ function createBoard() {
     card.classList.add("card");
     card.dataset.emoji = emoji;
     card.dataset.index = index;
+    card.style.width = `${cardSize}px`;
+    card.style.height = `${cardSize}px`;
+    card.style.fontSize = `${cardSize / 3}px`;
     card.addEventListener("click", flipCard);
     gameBoard.appendChild(card);
   });
@@ -74,8 +99,6 @@ function createBoard() {
   document.getElementById("timer").textContent = timeLeft;
   startTimer();
 }
-// Cập nhật lại board nếu thay đổi kích thước màn hình
-window.addEventListener("resize", createBoard);
 
 function flipCard() {
   if (
