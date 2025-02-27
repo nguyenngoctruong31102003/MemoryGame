@@ -17,10 +17,12 @@
             background-color: #C8C2E0;
             font-family: Arial, sans-serif;
         }
+
         .game-container {
             display: grid;
             grid-gap: 10px;
         }
+
         .card {
             width: 100px;
             height: 100px;
@@ -33,10 +35,24 @@
             cursor: pointer;
             border-radius: 10px;
         }
-        .flipped { background-color: #2ecc71; }
-        .matched { background-color: #9594B4; cursor: default; }
-        .scoreboard { margin-bottom: 20px; font-size: 20px; }
-        #nextStep, #playAgain, #highScores {
+
+        .flipped {
+            background-color: #2ecc71;
+        }
+
+        .matched {
+            background-color: #9594B4;
+            cursor: default;
+        }
+
+        .scoreboard {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        #nextStep,
+        #playAgain,
+        #highScores {
             display: none;
             margin-top: 20px;
             padding: 10px 20px;
@@ -47,6 +63,7 @@
             border: none;
             border-radius: 5px;
         }
+
         .popup {
             display: none;
             position: fixed;
@@ -58,7 +75,27 @@
             border-radius: 10px;
             text-align: center;
             font-size: 20px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        @media screen and (max-width: 768px) {
+            .game-container {
+                grid-gap: 5px;
+            }
+
+            .card {
+                width: calc(100vw / 5 - 10px); /* Chia màn hình thành 5 cột, trừ khoảng cách */
+                height: calc(100vw / 5 - 10px);
+                font-size: 18px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .card {
+                width: calc(100vw / 4 - 10px); /* Chia màn hình thành 4 cột */
+                height: calc(100vw / 4 - 10px);
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -133,7 +170,10 @@
             document.getElementById("highScores").style.display = "block";
 
             let level = levels[currentLevel];
-            gameBoard.style.gridTemplateColumns = `repeat(${level.cols}, 100px)`;
+            let screenWidth = window.innerWidth;
+            let cardSize = screenWidth < 768 ? Math.floor(screenWidth / level.cols) - 10 : 100;
+            
+            gameBoard.style.gridTemplateColumns = `repeat(${level.cols}, ${cardSize}px)`;
 
             let pairs = (level.rows * level.cols) / 2;
             cards = shuffle([...emojis.slice(0, pairs), ...emojis.slice(0, pairs)]);
@@ -143,6 +183,9 @@
                 card.classList.add("card");
                 card.dataset.emoji = emoji;
                 card.dataset.index = index;
+                card.style.width = `${cardSize}px`;
+                card.style.height = `${cardSize}px`;
+                card.style.fontSize = `${cardSize / 3}px`;
                 card.addEventListener("click", flipCard);
                 gameBoard.appendChild(card);
             });
