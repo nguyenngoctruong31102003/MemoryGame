@@ -1,11 +1,11 @@
 const levels = [
-  { rows: 3, cols: 2, time: 10 },
-  { rows: 3, cols: 4, time: 30 },
-  { rows: 3, cols: 6, time: 40 },
-  { rows: 3, cols: 8, time: 50 },
+  { rows: 2, cols: 3, time: 10 },
+  { rows: 3, cols: 4, time: 25 },
+  { rows: 4, cols: 4, time: 35 },
+  { rows: 4, cols: 5, time: 45 },
   { rows: 5, cols: 6, time: 60 },
-  { rows: 6, cols: 6, time: 70 },
-  { rows: 6, cols: 7, time: 80 },
+  { rows: 6, cols: 6, time: 75 },
+  { rows: 6, cols: 7, time: 90 },
 ];
 let emojis = [ "🍎", "🍌", "🍇", "🍉", "🍓", "🍒", "🥝", "🍍", "🍊", "🍋","🥥", "🍑", "🥭", "🍈", "🍏",];
 let currentLevel = 0, score = 0, matchedPairs = 0;
