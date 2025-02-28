@@ -62,10 +62,10 @@ function showPopup(message, persistent = false) {
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 
-  //   if (isPaused) {
-  //     isPaused = false;
-  startTimer();
-  //   }
+  if (!gameOver) {
+    isPaused = false;
+    startTimer();
+  }
 }
 
 document
@@ -121,6 +121,7 @@ function flipCard() {
   if (
     lockBoard ||
     gameOver ||
+    isPaused ||
     this.classList.contains("flipped") ||
     this.classList.contains("matched")
   )
@@ -139,6 +140,7 @@ function flipCard() {
   checkMatch();
 }
 
+// Hàm kiểm tra mặt thẻ
 function checkMatch() {
   if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
     firstCard.classList.add("matched");
@@ -163,7 +165,7 @@ function checkMatch() {
       firstCard.textContent = "";
       secondCard.textContent = "";
       resetBoard();
-    }, 1000);
+    }, 500);
   }
 }
 
@@ -174,7 +176,7 @@ function resetBoard() {
 }
 
 function startTimer() {
-  if (!gameStarted) return;
+  if (!gameStarted || gameOver) return;
 
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
@@ -196,9 +198,16 @@ function startTimer() {
 }
 
 function updateHighScores() {
-  highScores.push(score);
-  highScores.sort((a, b) => b - a);
-  highScores = highScores.slice(0, 3);
+  let newScore = score;
+  let newHighScores = [...highScores];
+
+  // Kiểm tra nếu điểm mới đủ để nằm trong Top 3
+  if (newScore > newHighScores[2]) {
+    newHighScores.push(newScore); // Thêm điểm mới vào danh sách
+    newHighScores.sort((a, b) => b - a); // Sắp xếp giảm dần
+    newHighScores = newHighScores.slice(0, 3); // Giữ lại 3 giá trị cao nhất
+  }
+  highScores = newHighScores;
   localStorage.setItem("highScores", JSON.stringify(highScores));
 }
 
