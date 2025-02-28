@@ -1,3 +1,11 @@
+// preloader
+window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+  setTimeout(() => {
+    loader.classList.add("unactive");
+  }, 10000);
+});
+
 const levels = [
   { rows: 2, cols: 3, time: 10 },
   { rows: 3, cols: 4, time: 25 },

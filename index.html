@@ -6,11 +6,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="Material/icon/Logo.png">
     <title>Trò chơi ghép đôi ghi nhớ</title>
-    <link rel="stylesheet" href="Material/style.css">
+    <!-- <link rel="stylesheet" href="Material/style.css"> -->
+    <style>
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #C8C2E0;
+    font-family: Arial, sans-serif;
+}
+
+/* Loading Element */
+.loader {
+    /* position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #C8C2E0; /* Màu nền phù hợp */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.truckWrapper {
+    width: 200px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: flex-end;
+    overflow-x: hidden;
+}
+
+/* truck upper body */
+.truckBody {
+    width: 130px;
+    height: fit-content;
+    margin-bottom: 6px;
+    animation: motion 1s linear infinite;
+}
+
+/* truck suspension animation*/
+@keyframes motion {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(3px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* truck's tires */
+.truckTires {
+    width: 130px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px 0px 15px;
+    position: absolute;
+    bottom: 0;
+}
+
+.truckTires svg {
+    width: 24px;
+}
+
+.road {
+    width: 100%;
+    height: 1.5px;
+    background-color: #282828;
+    position: relative;
+    bottom: 0;
+    align-self: flex-end;
+    border-radius: 3px;
+}
+
+.road::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 100%;
+    background-color: #282828;
+    right: -50%;
+    border-radius: 3px;
+    animation: roadAnimation 1.4s linear infinite;
+    border-left: 10px solid white;
+}
+
+.road::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    background-color: #282828;
+    right: -65%;
+    border-radius: 3px;
+    animation: roadAnimation 1.4s linear infinite;
+    border-left: 4px solid white;
+}
+
+.lampPost {
+    position: absolute;
+    bottom: 0;
+    right: -90%;
+    height: 90px;
+    animation: roadAnimation 1.4s linear infinite;
+}
+
+@keyframes roadAnimation {
+    0% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(-350px);
+    }
+}
+/* End Loading Element */
+
+/* Waitting Screnn */
+.start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: rgb(132, 205, 198);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    z-index: 1000;
+}
+
+.start-screen button {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.game-container {
+    display: grid;
+    grid-gap: 10px;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-color: #9F2C57;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.flipped {
+    background-color: #2ecc71;
+}
+
+.matched {
+    background-color: #9594B4;
+    cursor: default;
+}
+
+.scoreboard {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+#nextStep, #playAgain, #highScores {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+    .game-container {
+        grid-gap: 5px;
+    }
+    .card {
+        width: calc(100vw / 5 - 10px); /* Chia màn hình thành 5 cột, trừ khoảng cách */
+        height: calc(100vw / 5 - 10px);
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card {
+        width: calc(100vw / 4 - 10px); /* Chia màn hình thành 4 cột */
+        height: calc(100vw / 4 - 10px);
+        font-size: 16px;
+    }
+}
+    </style>
 
 </head>
 
 <body>
+    <!-- Start Loading -->
+    <div class="loader">
+        <div class="truckWrapper">
+            <div class="truckBody">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 198 93" class="trucksvg">
+                    <path stroke-width="3" stroke="#282828" fill="#F83D3D"
+                        d="M135 22.5H177.264C178.295 22.5 179.22 23.133 179.594 24.0939L192.33 56.8443C192.442 57.1332 192.5 57.4404 192.5 57.7504V89C192.5 90.3807 191.381 91.5 190 91.5H135C133.619 91.5 132.5 90.3807 132.5 89V25C132.5 23.6193 133.619 22.5 135 22.5Z">
+                    </path>
+                    <path stroke-width="3" stroke="#282828" fill="#7D7C7C"
+                        d="M146 33.5H181.741C182.779 33.5 183.709 34.1415 184.078 35.112L190.538 52.112C191.16 53.748 189.951 55.5 188.201 55.5H146C144.619 55.5 143.5 54.3807 143.5 53V36C143.5 34.6193 144.619 33.5 146 33.5Z">
+                    </path>
+                    <path stroke-width="2" stroke="#282828" fill="#282828"
+                        d="M150 65C150 65.39 149.763 65.8656 149.127 66.2893C148.499 66.7083 147.573 67 146.5 67C145.427 67 144.501 66.7083 143.873 66.2893C143.237 65.8656 143 65.39 143 65C143 64.61 143.237 64.1344 143.873 63.7107C144.501 63.2917 145.427 63 146.5 63C147.573 63 148.499 63.2917 149.127 63.7107C149.763 64.1344 150 64.61 150 65Z">
+                    </path>
+                    <rect stroke-width="2" stroke="#282828" fill="#FFFCAB" rx="1" height="7" width="5" y="63" x="187">
+                    </rect>
+                    <rect stroke-width="2" stroke="#282828" fill="#282828" rx="1" height="11" width="4" y="81" x="193">
+                    </rect>
+                    <rect stroke-width="3" stroke="#282828" fill="#DFDFDF" rx="2.5" height="90" width="121" y="1.5" x="6.5">
+                    </rect>
+                    <rect stroke-width="2" stroke="#282828" fill="#DFDFDF" rx="2" height="4" width="6" y="84" x="1"></rect>
+                </svg>
+            </div>
+            <div class="truckTires">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                    <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                    <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                    <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                    <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+            </div>
+            <div class="road"></div>
+    
+            <svg xml:space="preserve" viewBox="0 0 453.459 453.459" xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" fill="#000000" class="lampPost">
+                <path d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993
+        c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
+        c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
+        c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
+        h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
+        v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
+        V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
+        M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
+        h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
+            </svg>
+        </div>
+    </div>
+    <!-- End Loading -->
+
     <!-- Body -->
     <div id="startScreen" class="start-screen">
         <h1>Memory Game | By Jerry</h1>
@@ -27,7 +323,271 @@
     <div id="popup" class="popup"></div>
 
     <!-- Javascript -->
-    <script src="Material/script.js"></script>
+    <!-- <script src="Material/script.js"></script> -->
+    <script>
+// preloader
+window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader");
+
+    // Thêm hiệu ứng mờ dần trước khi ẩn
+    loader.style.transition = "opacity 0.5s ease-out";
+    loader.style.opacity = "0";
+
+    // Đợi hiệu ứng hoàn tất rồi ẩn luôn loader
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 500);
+});
+
+const levels = [
+  { rows: 2, cols: 3, time: 10 },
+  { rows: 3, cols: 4, time: 25 },
+  { rows: 4, cols: 4, time: 35 },
+  { rows: 4, cols: 5, time: 45 },
+  { rows: 5, cols: 6, time: 60 },
+  { rows: 6, cols: 6, time: 75 },
+  { rows: 6, cols: 7, time: 90 },
+];
+let emojis = [
+  "🍎",
+  "🍌",
+  "🍇",
+  "🍉",
+  "🍓",
+  "🍒",
+  "🥝",
+  "🍍",
+  "🍊",
+  "🍋",
+  "🥥",
+  "🍑",
+  "🥭",
+  "🍈",
+  "🍏",
+];
+let currentLevel = 0,
+  score = 0,
+  matchedPairs = 0;
+let cards,
+  firstCard,
+  secondCard,
+  lockBoard = false;
+let timeLeft, timerInterval;
+let highScores = JSON.parse(localStorage.getItem("highScores")) || [0, 0, 0];
+let isPaused = false;
+let gameStarted = false; // Trò chơi chưa bắt đầu
+let gameOver = false;
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+// Popup Message
+function showPopup(message, persistent = false) {
+  const popup = document.getElementById("popup");
+  popup.innerHTML = message;
+
+  if (persistent) {
+    popup.innerHTML += `<br><button onclick="closePopup()" style="margin-top:10px; padding:5px 10px; font-size:16px;">Đóng</button>`;
+  }
+
+  popup.style.display = "block";
+
+  if (!persistent) {
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 5000);
+  }
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+
+  if (!gameOver) {
+    isPaused = false;
+    startTimer();
+  }
+}
+
+document.getElementById("startGameButton").addEventListener("click", function () {
+  document.getElementById("startScreen").style.display = "none"; // Ẩn màn hình chờ
+  gameStarted = true; // Đánh dấu game đã bắt đầu
+  startGame(); // Bắt đầu trò chơi
+  startTimer(); // Bắt đầu đếm thời gian ngay sau khi nhấn "Bắt đầu"
+});
+
+function startGame() {
+  gameStarted = true;
+  startTimer();
+}
+
+function createBoard() {
+  const gameBoard = document.getElementById("gameBoard");
+  gameBoard.innerHTML = "";
+
+  document.getElementById("nextStep").style.display = "none";
+  document.getElementById("playAgain").style.display = "none";
+  document.getElementById("highScores").style.display = "block";
+
+  let level = levels[currentLevel];
+  let screenWidth = window.innerWidth;
+  let cardSize =
+    screenWidth < 768 ? Math.floor(screenWidth / level.cols) - 10 : 100;
+
+  gameBoard.style.gridTemplateColumns = `repeat(${level.cols}, ${cardSize}px)`;
+
+  let pairs = (level.rows * level.cols) / 2;
+  cards = shuffle([...emojis.slice(0, pairs), ...emojis.slice(0, pairs)]);
+
+  cards.forEach((emoji, index) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.emoji = emoji;
+    card.dataset.index = index;
+    card.style.width = `${cardSize}px`;
+    card.style.height = `${cardSize}px`;
+    card.style.fontSize = `${cardSize / 3}px`;
+    card.addEventListener("click", flipCard);
+    gameBoard.appendChild(card);
+  });
+
+  timeLeft = level.time;
+  document.getElementById("timer").textContent = timeLeft;
+  startTimer();
+}
+
+function flipCard() {
+  if (
+    lockBoard ||
+    gameOver ||
+    isPaused ||
+    this.classList.contains("flipped") ||
+    this.classList.contains("matched")
+  )
+    return;
+
+  this.classList.add("flipped");
+  this.textContent = this.dataset.emoji;
+
+  if (!firstCard) {
+    firstCard = this;
+    return;
+  }
+
+  secondCard = this;
+  lockBoard = true;
+  checkMatch();
+}
+
+// Hàm kiểm tra mặt thẻ
+function checkMatch() {
+  if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+    score++;
+    matchedPairs++;
+    document.getElementById("score").textContent = score;
+
+    if (matchedPairs === cards.length / 2) {
+      clearInterval(timerInterval); // Dừng thời gian khi hoàn thành vòng chơi
+      updateHighScores(); // Cập nhật điểm số
+      setTimeout(
+        () => (document.getElementById("nextStep").style.display = "block"),
+        1000
+      );
+    }
+    resetBoard();
+  } else {
+    setTimeout(() => {
+      firstCard.classList.remove("flipped");
+      secondCard.classList.remove("flipped");
+      firstCard.textContent = "";
+      secondCard.textContent = "";
+      resetBoard();
+    }, 500);
+  }
+}
+
+function resetBoard() {
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+}
+
+function startTimer() {
+  if (!gameStarted || gameOver) return;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      gameOver = true; // Đánh dấu trò chơi kết thúc, chặn lật thẻ
+      updateHighScores(); // Cập nhật điểm số
+      setTimeout(() => {
+        showPopup(`Bạn dở quá è! [GOODLUCK TO YOU] <br>Điểm của bạn: ${score}`);
+      }, 1000);
+      setTimeout(() => {
+        document.getElementById("playAgain").style.display = "block";
+      }, 6000);
+    }
+  }, 1000);
+}
+
+function updateHighScores() {
+  let newScore = score;
+  let newHighScores = [...highScores];
+
+  // Kiểm tra nếu điểm mới đủ để nằm trong Top 3
+  if (newScore > newHighScores[2]) {
+    newHighScores.push(newScore); // Thêm điểm mới vào danh sách
+    newHighScores.sort((a, b) => b - a); // Sắp xếp giảm dần
+    newHighScores = newHighScores.slice(0, 3); // Giữ lại 3 giá trị cao nhất
+  }
+  highScores = newHighScores;
+  localStorage.setItem("highScores", JSON.stringify(highScores));
+}
+
+function showHighScores() {
+  isPaused = true; // Tạm dừng thời gian
+  clearInterval(timerInterval); // Dừng đếm thời gian
+
+  showPopup(
+    `🏆 Top điểm cao nhất 🏆<br>
+                    🔥 Top 1: ${highScores[0]} điểm<br>
+                    💥 Top 2: ${highScores[1]} điểm<br>
+                    🚀 Top 3: ${highScores[2]} điểm`,
+    true // Popup sẽ không tự đóng
+  );
+}
+
+function resetGame() {
+  score = 0;
+  document.getElementById("score").textContent = score;
+  currentLevel = 0;
+  matchedPairs = 0;
+  gameOver = false;
+  gameStarted = true; // Đảm bảo khi chơi lại, game vẫn tiếp tục mà không hiện màn hình chờ
+  createBoard(); // Tạo lại bàn chơi
+  startTimer(); // Đảm bảo bộ đếm thời gian chạy lại
+}
+
+function nextLevel() {
+  currentLevel++;
+  if (currentLevel >= levels.length) {
+    showPopup("Chúc mừng! Bạn đã hoàn thành tất cả các vòng.");
+    setTimeout(resetGame, 2000);
+  } else {
+    matchedPairs = 0;
+    createBoard();
+  }
+}
+
+createBoard();
+
+    </script>
     
 </body>
 
