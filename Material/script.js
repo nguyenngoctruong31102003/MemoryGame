@@ -33,7 +33,8 @@ let cards,
   lockBoard = false;
 let timeLeft, timerInterval;
 let highScores = JSON.parse(localStorage.getItem("highScores")) || [0, 0, 0];
-let isPaused = false; // Biến kiểm tra trạng thái tạm dừng thời gian
+let isPaused = false;
+let gameStarted = false; // Trò chơi chưa bắt đầu
 let gameOver = false;
 
 function shuffle(array) {
@@ -61,10 +62,24 @@ function showPopup(message, persistent = false) {
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 
-  if (isPaused) {
-    isPaused = false; // Tiếp tục thời gian
-    startTimer();
-  }
+  //   if (isPaused) {
+  //     isPaused = false;
+  startTimer();
+  //   }
+}
+
+document
+  .getElementById("startGameButton")
+  .addEventListener("click", function () {
+    document.getElementById("startScreen").style.display = "none"; // Ẩn màn hình chờ
+    gameStarted = true; // Đánh dấu game đã bắt đầu
+    startGame(); // Bắt đầu trò chơi
+    startTimer(); // Bắt đầu đếm thời gian ngay sau khi nhấn "Bắt đầu"
+  });
+
+function startGame() {
+  gameStarted = true;
+  startTimer();
 }
 
 function createBoard() {
@@ -96,6 +111,7 @@ function createBoard() {
     card.addEventListener("click", flipCard);
     gameBoard.appendChild(card);
   });
+
   timeLeft = level.time;
   document.getElementById("timer").textContent = timeLeft;
   startTimer();
@@ -158,6 +174,8 @@ function resetBoard() {
 }
 
 function startTimer() {
+  if (!gameStarted) return;
+
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     timeLeft--;
@@ -203,7 +221,9 @@ function resetGame() {
   currentLevel = 0;
   matchedPairs = 0;
   gameOver = false;
-  createBoard();
+  gameStarted = true; // Đảm bảo khi chơi lại, game vẫn tiếp tục mà không hiện màn hình chờ
+  createBoard(); // Tạo lại bàn chơi
+  startTimer(); // Đảm bảo bộ đếm thời gian chạy lại
 }
 
 function nextLevel() {

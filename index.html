@@ -7,21 +7,28 @@
     <link rel="icon" type="image/png" href="Material/icon/Logo.png">
     <title>Trò chơi ghép đôi ghi nhớ</title>
     <link rel="stylesheet" href="Material/style.css">
+
 </head>
 
 <body>
     <!-- Body -->
+    <div id="startScreen" class="start-screen">
+        <h1>Memory Game | By Jerry</h1>
+        <button id="startGameButton">🔥Start🔥</button>
+    </div>
+
     <div class="scoreboard">
         Điểm của bạn: <span id="score">0</span> | Thời gian còn lại: <span id="timer">10</span> giây
     </div>
     <div class="game-container" id="gameBoard"></div>
     <button id="nextStep" onclick="nextLevel()">Next Step</button>
     <button id="playAgain" onclick="resetGame()">Play Again</button>
-    <button id="highScores" onclick="showHighScores()">Điểm số cao nhất</button>
+    <button id="highScores" onclick="showHighScores()">🏆Điểm số cao nhất🏆</button>
     <div id="popup" class="popup"></div>
 
     <!-- Javascript -->
     <script src="Material/script.js"></script>
+
     
 </body>
 
